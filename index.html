@@ -1,0 +1,38 @@
+<html><head></head><body>
+
+Pos Trx ID :<input type="text" id="pos_trx_id">   
+<br>    Item Id :<input type="text" id="item_id">   
+<br>    Qty :<input type="text" id="qty">
+<input type="button" id="btn_isikan" value="Isikan">   
+<script>
+    document.querySelector("#btn_isikan").addEventListener('click',function(){
+        pos_trx_id = document.querySelector("#pos_trx_id").value;
+        var pos_trx = {
+            'pos_trx_id':pos_trx_id,
+            'item_id':document.querySelector("#item_id").value,
+            'qty':document.querySelector("#qty").value
+        };
+
+        if ('serviceWorker' in navigator && 'SyncManager' in window)
+        {
+            navigator.serviceWorker.ready
+            .then(function(sw)
+            {
+                idb_pos_trx.set(pos_trx_id,pos_trx)
+                .then(function(){
+                    sw.sync.register('sync-new-trx');
+                });
+            });
+        }
+        else
+        {
+            idb_pos_trx.set(pos_trx_id,pos_trx);
+        }
+    });
+</script>
+    
+<script src="/idb.js"></script>
+<script src="/pos_trx.js"></script>
+<script src="/app.js"></script>
+
+</body></html>
